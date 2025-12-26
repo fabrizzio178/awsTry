@@ -1,0 +1,38 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-service
+  datasource:
+    # AQUI EL CAMBIO: Usar la variable ${DB_HOST:...}
+    url: "jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME}"
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      initialization-fail-timeout: 0
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+aws:
+  region: us-east-1
+  s3:
+    bucket-name: task-bucket
+    endpoint: "http://${AWS_HOST:localhost}:4566"
+  sqs:
+    queue-name: task-queue
+    endpoint: "http://${AWS_HOST:localhost}:4566"

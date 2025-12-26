@@ -1,0 +1,13 @@
+.env
+# Local PostgreSQL database
+postgres_data/
+# Local AWS LocalStack data
+localstack_data/
+
+#mvn 
+target/
+# Logs
+*.log
+# IDE files
+.vscode/
+.idea/
