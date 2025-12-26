@@ -31,14 +31,33 @@ services:
       timeout: 3s
       retries: 20
       start_period: 5s
+    
+  redis:
+    image: redis:alpine
+    container_name: redis 
+    command: redis-server --requirepass ${REDIS_PASS}
+    ports:
+      - "6379:6379"
+  
+  gateway:
+    build: ./gateway
+    container_name: gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PASSWORD=${REDIS_PASS}
+    depends_on:
+      - redis
+      - api-service
+
 
   api-service:
     build: ./api-service
     container_name: api_service
-    ports:
-      - "8080:8080"
     environment:
       - DB_HOST=postgres
+      - DB_NAME=${DB_NAME}
       - AWS_HOST=localstack
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASS}
@@ -57,6 +76,7 @@ services:
     container_name: worker_service
     environment:
       - DB_HOST=postgres
+      - DB_NAME=${DB_NAME}
       - AWS_HOST=localstack
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASS}
@@ -91,7 +111,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_USER_PASS}
     depends_on:
       prometheus:
         condition: service_started
