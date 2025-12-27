@@ -103,6 +103,7 @@ Respuesta: devuelve la entidad `Task` creada (con `status=PENDING`).
 - Genera un PDF `report_task_<id>.pdf`
 - Lo sube al bucket `task-bucket`
 - Actualiza la tarea (`COMPLETED`) con `resultUrl`
+- Envia un email simulado via SES de AWS
 
 La URL que se guarda actualmente tiene formato:
 
