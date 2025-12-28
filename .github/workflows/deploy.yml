@@ -24,6 +24,7 @@ jobs:
       
       - name: Build Docker
         run: |
-          docker-compose build --no-cache api-service worker-service gateway
-          docker-compose up -d --remove-orphans
+          docker compose down --remove-orphans
+          docker compose build --no-cache 
+          docker compose up -d 
           docker image prune -f 
